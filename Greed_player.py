@@ -1,7 +1,6 @@
 import random
 
 class Greed_player(object):
-    turn = 0
     def __init__(self, name="unknown"):
         self.name = name
         self.__totalScore = 0
@@ -46,7 +45,7 @@ class Greed_player(object):
             else:
                 dice["sixes"] += 1
 
-        score = self.count_score(dice.copy()) # TODO find out why python is not pass-by-value
+        score = self.count_score(dice.copy())
 
         self.set_score(self.get_score() + score)
         return (dice, score)

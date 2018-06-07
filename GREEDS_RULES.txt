@@ -59,8 +59,3 @@ Once a player reaches 3000 (or more) points, the game enters the final
 round where each of the other players gets one more turn. The winner
 is the player with the highest score after the final round.
 
-== References
-
-Greed is described on Wikipedia at
-http://en.wikipedia.org/wiki/Greed_(dice_game), however the rules are
-a bit different from the rules given here.
