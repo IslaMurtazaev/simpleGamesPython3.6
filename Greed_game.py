@@ -2,10 +2,12 @@
 My little greed game, just for practicing
 """
 import random
+import time
+from threading import Thread
 from Greed_player import *
 
 def start_game():
-    if ("yes" in input("Do you want to play the Greed game? ").lower()):
+    if ("y" in input("Do you want to play the Greed game? ").lower()):
         print("Great! I'm sure you're gonna like it)\n")
         return True
     else:
@@ -25,7 +27,7 @@ def loadInstructions():
 
 
 def printInstructions():
-    if ("yes" in input("Are you familiar with the rules? ").lower()):
+    if ("y" in input("Are you familiar with the rules? ").lower()):
         print("Fine, let's start then\n")
     else:
         print("Ok, here you are\n")
@@ -44,23 +46,33 @@ def prompt_num_of_players():
 
 
 def create_player_instances(num_of_players):
-    players = []
+    names = []
     for i in range(num_of_players):
-        players.append(Greed_player(input("What is the name of player #%d "%(i+1))))
+        while (True):
+            name = input("What is the name of player #%d "%(i+1))
+            if (name in names):
+                print("Please use a different name to make clear distinction")
+                continue
+            names.append(name)
+            break
     print()
-    return players
+    return [Greed_player(name) for name in names]
 
 
 def play_one_turn(turn, players):
-    print("The turn number "+ str(turn) +"\n")
+    print("Turn "+ str(turn) +"\n")
+    time.sleep(1)
     for player in players:
-        print(player.name +" rolling dice")
+        print(player.name +" rolling dice..\n")
+        time.sleep(1)
         result = player.roll_dice()
         dice = result[0]
         for key in dice.keys():
             if dice[key]:
                 print(key +" "+ str(dice[key]))
-        print(player.name +"'s score: "+ str(result[1]) +"\n")
+        print("\n"+ player.name +"'s score: "+ str(result[1])+"\n")
+        time.sleep(3)
+    print("----------------------------------------------\n")
 
 
 def is_final_turn(players):
@@ -68,33 +80,41 @@ def is_final_turn(players):
     for player in players:
         if (player.get_score() >= 3000):
             print(player.name +" has reached 3000\n")
+            time.sleep(1)
             result = True
     return result
 
 
 def final_turn(players):
     print("Final turn!\n")
+    time.sleep(1)
     for player in players:
-        print(player.name +" rolling dice")
+        print(player.name +" rolling dice..\n")
+        time.sleep(1)
         result = player.roll_dice()
         dice = result[0]
         for key in dice.keys():
             if dice[key]:
                 print(key +" "+ str(dice[key]))
-        print(player.name +"'s score: "+ str(result[1]))
+        print("\n"+ player.name +"'s score: "+ str(result[1]))
         print("In total: "+ str(player.get_score()) +"\n")
+        time.sleep(3)
 
 
-def determine_winner(players):
-    max_score = max([pl.get_score() for pl in players])
-    winners = [pl for pl in players if pl.get_score() == max_score]
-    if (len(winners)) > 1:
-        print("We have more than "+ str(len(winners)) +" winners!")
-        for winner in winners:
-            print(winner.name)
-    else:
-        print("We have a winner!")
-        print(winners[0].name)
+def produce_result(players):
+    players_dic = {} # score: name(s)
+    for player in players:
+        if (player.get_score() in players_dic.keys()):
+            players_dic[player.get_score()].append(player.name)
+        else:
+            players_dic[player.get_score()] = [player.name]
+
+    place = 1
+    print("\n\nCongratulations!!\n")
+    for score in sorted(players_dic.keys(), reverse=True):
+        print(place, ", ".join(players_dic[score]))
+        place += 1
+
 
 
 def main():
@@ -109,7 +129,7 @@ def main():
         turn += 1
         
     final_turn(players)
-    determine_winner(players)
+    produce_result(players)
 
 
 
